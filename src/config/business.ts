@@ -55,7 +55,7 @@ export const SERVICES_DATA: ServiceItem[] = [
       "Professional CCTV solutions for homes, shops, offices, and commercial properties, including suitable HD and IP camera systems.",
     fullDescription:
       "End-to-end security camera system installation for domestic, commercial, and industrial facilities. We evaluate line-of-sight, lighting conditions, and cabling requirements to position HD analog, IP, and dome/bullet cameras for optimal perimeter surveillance.",
-    image: "/src/assets/images/service_cctv_installation_1791636382857.jpg",
+    image: "/images/service_cctv_installation_1791636382857.jpg",
     features: [
       "HD & 4K IP Camera Systems",
       "Night Vision & Infrared Clarity",
@@ -72,7 +72,7 @@ export const SERVICES_DATA: ServiceItem[] = [
       "Convenient surveillance with supported mobile live viewing, remote access, and camera configuration.",
     fullDescription:
       "Smart wireless camera setups ideal for apartments, individual residences, and small retail establishments. Includes cloud & local SD card configuration, two-way audio setup, motion alert calibration, and multi-device mobile app linking.",
-    image: "/src/assets/images/service_wifi_camera_1791636394226.jpg",
+    image: "/images/service_wifi_camera_1791636394226.jpg",
     features: [
       "360° Pan-Tilt-Zoom (PTZ) Wireless Cameras",
       "Instant Smartphone Live Streaming & Alerts",
@@ -89,7 +89,7 @@ export const SERVICES_DATA: ServiceItem[] = [
       "Sliding and swing gate automation solutions for suitable residential and commercial properties.",
     fullDescription:
       "Modern motorized automated gate solutions designed for residential villas, apartment gates, and factory entrances. Features robust motor drives, safety infrared sensors, remote control fobs, and manual bypass during power outages.",
-    image: "/src/assets/images/service_gate_automation_1791636407541.jpg",
+    image: "/images/service_gate_automation_1791636407541.jpg",
     features: [
       "Sliding & Swing Gate Motor Mechanisms",
       "Remote Key Fob & RFID Access",
@@ -106,7 +106,7 @@ export const SERVICES_DATA: ServiceItem[] = [
       "Solar panel installation solutions tailored to property requirements and energy needs.",
     fullDescription:
       "High-efficiency rooftop solar photovoltaic systems for homes and commercial establishments. Tailored sizing, high-grade solar panels, reliable inverters, and clean mounting structures to lower electricity bills.",
-    image: "/src/assets/images/service_solar_installation_1791636417432.jpg",
+    image: "/images/service_solar_installation_1791636417432.jpg",
     features: [
       "Rooftop Solar PV Design & Sizing",
       "On-Grid & Hybrid Inverter Solutions",
@@ -123,7 +123,7 @@ export const SERVICES_DATA: ServiceItem[] = [
       "Troubleshooting, maintenance, repairs, servicing, and AMC options for supported security equipment.",
     fullDescription:
       "Comprehensive diagnostic and repair service for malfunctioning cameras, power supplies, video loss, hard drive recording errors, gate motors, and periodic preventative AMC health checks across Chennai.",
-    image: "/src/assets/images/about_technician_service_1791636428379.jpg",
+    image: "/images/about_technician_service_1791636428379.jpg",
     features: [
       "Rapid Fault Diagnosis & Cable Testing",
       "DVR/NVR Hard Drive & Power Supply Repairs",

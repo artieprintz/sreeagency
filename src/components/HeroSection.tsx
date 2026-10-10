@@ -90,7 +90,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onGetQuote, onRequestC
           <div className="lg:col-span-5">
             <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-[#082D68] group">
               <img
-                src="/src/assets/images/hero_security_cctv_1791636369635.jpg"
+                src="/images/hero_security_cctv_1791636369635.jpg"
                 alt="SREE Agency Professional CCTV Security Monitoring"
                 className="w-full h-[340px] sm:h-[420px] object-cover transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"

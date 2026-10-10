@@ -11,7 +11,7 @@ export const AboutSection: React.FC = () => {
           <div className="lg:col-span-5 order-2 lg:order-1">
             <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-lg bg-slate-100">
               <img
-                src="/src/assets/images/about_technician_service_1791636428379.jpg"
+                src="/images/about_technician_service_1791636428379.jpg"
                 alt="SREE Agency Security Specialist Calibrating CCTV Camera System"
                 className="w-full h-[380px] sm:h-[440px] object-cover"
                 loading="lazy"
