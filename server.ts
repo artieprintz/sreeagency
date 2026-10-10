@@ -770,4 +770,10 @@ async function setupApp() {
   });
 }
 
-setupApp();
+// Export the Express app for Vercel's serverless function entry point.
+// Vercel serves the Vite build as static files and routes /api/* to api/index.ts.
+export { app };
+
+if (!process.env.VERCEL) {
+  setupApp();
+}

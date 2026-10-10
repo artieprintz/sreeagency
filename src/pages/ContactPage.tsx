@@ -91,6 +91,18 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         }),
       });
 
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.toLowerCase().includes('application/json')) {
+        const responseText = await response.text();
+        console.error('[CONTACT FORM] API returned non-JSON response', {
+          status: response.status,
+          url: response.url,
+          body: responseText.slice(0, 300),
+        });
+        throw new Error(
+          `The contact API returned an unexpected response (HTTP ${response.status}). Please try again later.`
+        );
+      }
       const result = await response.json();
 
       if (!response.ok) {
