@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;
+  }
+}
+
+:root {
+  --color-navy: #031D49;
+  --color-darkblue: #082D68;
+  --color-gold: #FFC400;
+  --color-red: #E21B23;
+  --color-lightbg: #F5F7FA;
+  --color-darktext: #14213D;
+}
