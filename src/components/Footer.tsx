@@ -63,29 +63,29 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms, onNa
               </li>
               <li>
                 <a
-                  href="/#brands"
-                  onClick={(e) => handleLink(e, '/#brands')}
+                  href="/#estimator"
+                  onClick={(e) => handleLink(e, '/#estimator')}
                   className="hover:text-[#FFC400] transition-colors"
                 >
-                  Brands We Deal With
+                  Instant Quote Estimator
                 </a>
               </li>
               <li>
                 <a
-                  href="/#why-us"
-                  onClick={(e) => handleLink(e, '/#why-us')}
-                  className="hover:text-[#FFC400] transition-colors"
-                >
-                  Why Choose Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/#about"
-                  onClick={(e) => handleLink(e, '/#about')}
+                  href="/about"
+                  onClick={(e) => handleLink(e, '/about')}
                   className="hover:text-[#FFC400] transition-colors"
                 >
                   About SREE Agency
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/#areas"
+                  onClick={(e) => handleLink(e, '/#areas')}
+                  className="hover:text-[#FFC400] transition-colors"
+                >
+                  Chennai Coverage
                 </a>
               </li>
               <li>
@@ -99,11 +99,20 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms, onNa
               </li>
               <li>
                 <a
+                  href="/#faq"
+                  onClick={(e) => handleLink(e, '/#faq')}
+                  className="hover:text-[#FFC400] transition-colors"
+                >
+                  Security FAQs
+                </a>
+              </li>
+              <li>
+                <a
                   href="/contact"
                   onClick={(e) => handleLink(e, '/contact')}
                   className="hover:text-[#FFC400] transition-colors"
                 >
-                  Contact, Quote & Query
+                  Contact & Free Survey
                 </a>
               </li>
             </ul>

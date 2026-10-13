@@ -6,23 +6,27 @@ interface CallbackModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultService?: string;
+  defaultMessage?: string;
+  defaultPropertyType?: string;
 }
 
 export const CallbackModal: React.FC<CallbackModalProps> = ({
   isOpen,
   onClose,
   defaultService,
+  defaultMessage,
+  defaultPropertyType,
 }) => {
   const [formData, setFormData] = useState({
     customer_name: '',
     phone_number: '',
     email: '',
     service_required: defaultService || SERVICES_DATA[0].name,
-    property_type: '',
+    property_type: defaultPropertyType || '',
     customer_location: '',
     preferred_callback_date: '',
     preferred_callback_time: 'Morning (9 AM - 12 PM)',
-    customer_message: '',
+    customer_message: defaultMessage || '',
     consent_recorded: true,
   });
 
@@ -35,7 +39,13 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
     if (defaultService) {
       setFormData((prev) => ({ ...prev, service_required: defaultService }));
     }
-  }, [defaultService]);
+    if (defaultMessage) {
+      setFormData((prev) => ({ ...prev, customer_message: defaultMessage }));
+    }
+    if (defaultPropertyType) {
+      setFormData((prev) => ({ ...prev, property_type: defaultPropertyType }));
+    }
+  }, [defaultService, defaultMessage, defaultPropertyType]);
 
   if (!isOpen) return null;
 

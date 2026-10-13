@@ -18,10 +18,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Services', path: '/services' },
-    { label: 'Brands', path: '/#brands' },
-    { label: 'Why Us', path: '/#why-us' },
+    { label: 'Estimator', path: '/#estimator' },
+    { label: 'About', path: '/about' },
+    { label: 'Coverage', path: '/#areas' },
     { label: 'Reviews', path: '/#reviews' },
-    { label: 'Contact & Quote', path: '/contact' },
+    { label: 'FAQ', path: '/#faq' },
+    { label: 'Contact', path: '/contact' },
   ];
 
   const handleLinkClick = (e: React.MouseEvent, path: string) => {
@@ -61,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Main 3-Zone Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 flex items-center justify-between gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 flex items-center justify-between gap-6">
         {/* Zone 1: Brand Wordmark Element */}
         <button
           onClick={(e) => handleLinkClick(e, '/')}
@@ -82,11 +84,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Zone 2: Single-line Text Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-200">
+        <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-slate-200">
           {navLinks.map((link) => {
             const isActive =
               (link.path === '/' && currentPath === '/') ||
               (link.path === '/services' && currentPath === '/services') ||
+              (link.path === '/about' && currentPath === '/about') ||
               (link.path === '/contact' && (currentPath === '/contact' || currentPath === '/quote' || currentPath === '/query'));
 
             return (

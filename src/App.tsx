@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
+import { CostEstimatorSection } from './components/CostEstimatorSection';
 import { ServicesSection } from './components/ServicesSection';
 import { BrandsSection } from './components/BrandsSection';
 import { WhyChooseUsSection } from './components/WhyChooseUsSection';
+import { ServiceAreasSection } from './components/ServiceAreasSection';
 import { AboutSection } from './components/AboutSection';
 import { HowItWorksSection } from './components/HowItWorksSection';
 import { GoogleReviewsSection } from './components/GoogleReviewsSection';
+import { FaqSection } from './components/FaqSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { FloatingActions } from './components/FloatingActions';
@@ -14,12 +17,14 @@ import { CallbackModal } from './components/CallbackModal';
 import { AdminDashboardModal } from './components/AdminDashboardModal';
 import { LegalModal } from './components/LegalModals';
 import { ServicesPage } from './pages/ServicesPage';
+import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
     const path = window.location.pathname.toLowerCase();
     if (path.startsWith('/services')) return '/services';
+    if (path.startsWith('/about')) return '/about';
     if (path.startsWith('/contact') || path.startsWith('/quote') || path.startsWith('/query')) return '/contact';
     return '/';
   });
@@ -27,6 +32,8 @@ export default function App() {
   const [contactTab, setContactTab] = useState<'quote' | 'query' | 'callback'>('quote');
   const [callbackModalOpen, setCallbackModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string | undefined>(undefined);
+  const [customMessage, setCustomMessage] = useState<string | undefined>(undefined);
+  const [customPropertyType, setCustomPropertyType] = useState<string | undefined>(undefined);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [legalModalType, setLegalModalType] = useState<'privacy' | 'terms' | null>(null);
 
@@ -44,6 +51,12 @@ export default function App() {
 
       if (path === '/services' || path === '/services/') {
         setCurrentPath('/services');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (path === '/about' || path === '/about/') {
+        setCurrentPath('/about');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -99,7 +112,7 @@ export default function App() {
 
   const handleNavigate = (
     path: string,
-    options?: { tab?: 'quote' | 'query' | 'callback'; service?: string }
+    options?: { tab?: 'quote' | 'query' | 'callback'; service?: string; message?: string; propertyType?: string }
   ) => {
     if (options?.service) {
       setSelectedService(options.service);
@@ -107,6 +120,14 @@ export default function App() {
 
     if (options?.tab) {
       setContactTab(options.tab);
+    }
+
+    if (options?.message) {
+      setCustomMessage(options.message);
+    }
+
+    if (options?.propertyType) {
+      setCustomPropertyType(options.propertyType);
     }
 
     // Hash anchor within Home or from another page
@@ -142,6 +163,13 @@ export default function App() {
       return;
     }
 
+    if (path === '/about') {
+      window.history.pushState({}, '', '/about');
+      setCurrentPath('/about');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (path === '/contact') {
       window.history.pushState({}, '', '/contact');
       setCurrentPath('/contact');
@@ -171,8 +199,9 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleOpenCallback = (prefilledService?: string) => {
+  const handleOpenCallback = (prefilledService?: string, prefilledMessage?: string) => {
     setSelectedService(prefilledService);
+    setCustomMessage(prefilledMessage);
     setCallbackModalOpen(true);
   };
 
@@ -187,9 +216,29 @@ export default function App() {
     handleNavigate('/contact', { tab: 'quote' });
   };
 
+  const handleEstimateSelected = (details: {
+    serviceName: string;
+    propertyType: string;
+    cameraCount: string;
+    techType: string;
+    storageDays: string;
+    estimatedRange: string;
+    notes: string;
+  }) => {
+    setSelectedService(details.serviceName);
+    setCustomPropertyType(details.propertyType);
+    setCustomMessage(details.notes);
+    setContactTab('quote');
+    handleNavigate('/contact', {
+      service: details.serviceName,
+      propertyType: details.propertyType,
+      message: details.notes,
+      tab: 'quote',
+    });
+  };
+
   const handleCloseAdmin = () => {
     setAdminModalOpen(false);
-    // If user opened via /admin URL or #admin hash, revert URL back to /
     const path = window.location.pathname.toLowerCase();
     if (path === '/admin' || path === '/admin/' || window.location.hash.toLowerCase() === '#admin') {
       window.history.pushState({}, '', '/');
@@ -198,7 +247,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F7FA] text-[#14213D]">
-      {/* 1. Responsive Navigation Bar (NO admin link anywhere in UI) */}
+      {/* 1. Responsive Navigation Bar */}
       <Navbar
         currentPath={currentPath}
         onNavigate={handleNavigate}
@@ -207,27 +256,38 @@ export default function App() {
 
       <main className="flex-1">
         {currentPath === '/services' ? (
-          /* Separate Dedicated Services Page */
+          /* Dedicated Services Page */
           <ServicesPage
             onNavigateToContact={(serviceName, tab) =>
               handleNavigate('/contact', { service: serviceName, tab: tab || 'quote' })
             }
             onRequestCallback={(serviceName) => handleOpenCallback(serviceName)}
           />
+        ) : currentPath === '/about' ? (
+          /* Dedicated About Us Page */
+          <AboutPage
+            onNavigateToContact={() => handleNavigate('/contact', { tab: 'quote' })}
+            onRequestCallback={() => handleOpenCallback()}
+          />
         ) : currentPath === '/contact' ? (
-          /* Separate Dedicated Contact, Request a Quote & Query Page */
+          /* Dedicated Contact, Quote & Query Page */
           <ContactPage
             initialService={selectedService}
             initialTab={contactTab}
+            initialMessage={customMessage}
+            initialPropertyType={customPropertyType}
           />
         ) : (
-          /* Default Homepage with Full Overview & Conversion Sections */
+          /* Default Homepage with Complete Suite of Conversion Sections */
           <>
             {/* Homepage Hero Section */}
             <HeroSection
               onGetQuote={handleGetFreeQuote}
               onRequestCallback={() => handleOpenCallback()}
             />
+
+            {/* Interactive Security Package Cost Estimator */}
+            <CostEstimatorSection onSelectEstimate={handleEstimateSelected} />
 
             {/* Services Overview Section with 5 Core Offerings */}
             <ServicesSection
@@ -245,11 +305,24 @@ export default function App() {
             {/* How It Works (4-Step Workflow) */}
             <HowItWorksSection />
 
+            {/* Chennai Local Service Coverage Areas */}
+            <ServiceAreasSection
+              onRequestCallback={(areaName) =>
+                handleOpenCallback(
+                  'CCTV Camera Installation',
+                  `Customer requested on-site inspection for location: ${areaName}`
+                )
+              }
+            />
+
             {/* About Us Section */}
             <AboutSection />
 
             {/* Genuine Google Reviews Section (Authentic Customer Feedback) */}
             <GoogleReviewsSection />
+
+            {/* Frequently Asked Questions */}
+            <FaqSection onRequestCallback={() => handleOpenCallback()} />
 
             {/* Contact Section on Homepage */}
             <ContactSection initialService={selectedService} />
@@ -257,7 +330,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer (NO admin link, clean navigation to pages) */}
+      {/* Footer */}
       <Footer
         onOpenPrivacy={() => setLegalModalType('privacy')}
         onOpenTerms={() => setLegalModalType('terms')}
@@ -272,9 +345,11 @@ export default function App() {
         isOpen={callbackModalOpen}
         onClose={() => setCallbackModalOpen(false)}
         defaultService={selectedService}
+        defaultMessage={customMessage}
+        defaultPropertyType={customPropertyType}
       />
 
-      {/* Modal: Secure Staff Admin Dashboard (Opens ONLY when accessing /admin via URL) */}
+      {/* Modal: Secure Staff Admin Dashboard */}
       <AdminDashboardModal
         isOpen={adminModalOpen}
         onClose={handleCloseAdmin}

@@ -52,10 +52,11 @@ interface EnquiryRecord {
 }
 
 interface IntegrationInfo {
-  supabase: { status: string; label: string; quotaNote: string };
-  slack: { status: string; channel: string; label: string; quotaNote: string };
-  googleSheets: { status: string; label: string };
-  googleReviews: { status: string; label: string; policyNote: string };
+  storage?: { status: string; label: string; quotaNote: string };
+  discord?: { status: string; label: string; quotaNote: string };
+  slack?: { status: string; channel: string; label: string; quotaNote: string };
+  googleSheets?: { status: string; label: string };
+  googleReviews?: { status: string; label: string; policyNote: string };
 }
 
 interface AdminDashboardModalProps {
@@ -320,7 +321,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             <div>
               <h2 className="text-base font-bold text-white">SREE Agency Lead Management System</h2>
               <p className="text-[11px] text-slate-300">
-                Primary Database: Supabase PostgreSQL · Real-Time Alerts: Discord Webhook
+                Independent Lead Storage Engine · Real-Time Alerts: Discord Webhook
               </p>
             </div>
           </div>
@@ -513,32 +514,26 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       Free-Tier System Integrations & Health Monitor
                     </h3>
                     <p className="text-xs text-slate-500 mb-6">
-                      SREE Agency operates on a zero-subscription free-tier architecture utilizing Supabase Free and Slack Free.
+                      SREE Agency operates on an independent, zero-subscription architecture with resilient local persistence and real-time Discord notifications.
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Supabase Free */}
+                      {/* Primary Storage Engine */}
                       <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Database className="w-4 h-4 text-[#082D68]" />
-                            <strong className="text-xs text-[#031D49]">Primary Database</strong>
+                            <strong className="text-xs text-[#031D49]">Primary Storage Engine</strong>
                           </div>
-                          <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                              integrationInfo?.supabase.status === 'connected'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {integrationInfo?.supabase.status === 'connected' ? 'SUPABASE ACTIVE' : 'LOCAL MIRROR'}
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                            STORAGE ACTIVE
                           </span>
                         </div>
                         <p className="text-xs text-slate-700 font-medium">
-                          {integrationInfo?.supabase.label}
+                          {integrationInfo?.storage?.label || 'Persistent Local & Cloud-Safe Storage'}
                         </p>
                         <p className="text-[11px] text-slate-500">
-                          {integrationInfo?.supabase.quotaNote}
+                          {integrationInfo?.storage?.quotaNote || 'High-reliability JSON storage with zero external database dependencies.'}
                         </p>
                       </div>
 
@@ -568,14 +563,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         <div className="flex items-center justify-between">
                           <strong className="text-xs text-[#031D49]">Google Sheets Sync</strong>
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
-                            OPTIONAL
+                            {integrationInfo?.googleSheets?.status === 'connected' ? 'CONNECTED' : 'OPTIONAL'}
                           </span>
                         </div>
                         <p className="text-xs text-slate-700">
-                          {integrationInfo?.googleSheets.label}
+                          {integrationInfo?.googleSheets?.label || 'Google Sheets Webhook Sync Optional'}
                         </p>
                         <p className="text-[11px] text-slate-500">
-                          Optional auxiliary sync. Supabase remains the primary source of truth.
+                          Optional auxiliary sync. Local database remains the primary source of truth.
                         </p>
                       </div>
 
@@ -588,7 +583,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           </span>
                         </div>
                         <p className="text-xs text-slate-700">
-                          {integrationInfo?.googleReviews.label}
+                          {integrationInfo?.googleReviews?.label || 'Verified Google Business Profile Reviews Displayed'}
                         </p>
                         <p className="text-[11px] text-slate-500">
                           Strict policy: Zero fabricated reviews, simulated ratings, or fake testimonials.

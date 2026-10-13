@@ -19,11 +19,15 @@ import { BUSINESS_CONFIG, buildTelUrl, buildWhatsAppUrl, SERVICES_DATA } from '.
 interface ContactPageProps {
   initialService?: string;
   initialTab?: 'quote' | 'query' | 'callback';
+  initialMessage?: string;
+  initialPropertyType?: string;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({
   initialService,
   initialTab = 'quote',
+  initialMessage,
+  initialPropertyType,
 }) => {
   const [activeTab, setActiveTab] = useState<'quote' | 'query' | 'callback'>(initialTab);
 
@@ -32,9 +36,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
     phone_number: '',
     email: '',
     service_required: initialService || SERVICES_DATA[0].name,
-    property_type: 'Residential (Villa / Flat)',
+    property_type: initialPropertyType || 'Residential (Villa / Flat)',
     customer_location: '',
-    customer_message: '',
+    customer_message: initialMessage || '',
     preferred_callback_date: '',
     preferred_callback_time: 'Morning (9 AM - 12 PM)',
     consent_recorded: true,
@@ -55,7 +59,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({
     if (initialService) {
       setFormData((prev) => ({ ...prev, service_required: initialService }));
     }
-  }, [initialService]);
+    if (initialMessage) {
+      setFormData((prev) => ({ ...prev, customer_message: initialMessage }));
+    }
+    if (initialPropertyType) {
+      setFormData((prev) => ({ ...prev, property_type: initialPropertyType }));
+    }
+  }, [initialService, initialMessage, initialPropertyType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
