@@ -3,11 +3,15 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/enquiries",
+      "destination": "/api/enquiries.ts"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/index.ts"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]

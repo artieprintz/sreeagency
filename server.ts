@@ -15,36 +15,6 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Safe persistent storage directory resolver (resilient in serverless, read-only containers & VPS)
-function resolveStorageConfiguration(): { dataDir: string; dataFile: string } {
-  // If in serverless (e.g. Vercel, AWS Lambda) or read-only container, prefer os.tmpdir()
-  const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-
-  if (!isServerless) {
-    try {
-      const localDir = path.join(__dirname, 'data');
-      if (!fs.existsSync(localDir)) {
-        fs.mkdirSync(localDir, { recursive: true });
-      }
-      return { dataDir: localDir, dataFile: path.join(localDir, 'enquiries.json') };
-    } catch (err) {
-      console.warn('[STORAGE] Local directory not writable, using temporary directory fallback:', err);
-    }
-  }
-
-  const tmpDir = path.join(os.tmpdir(), 'sree_agency_data');
-  try {
-    if (!fs.existsSync(tmpDir)) {
-      fs.mkdirSync(tmpDir, { recursive: true });
-    }
-  } catch (err) {
-    console.warn('[STORAGE] Could not create tmp dir:', err);
-  }
-  return { dataDir: tmpDir, dataFile: path.join(tmpDir, 'enquiries.json') };
-}
-
-const { dataDir: DATA_DIR, dataFile: DATA_FILE } = resolveStorageConfiguration();
-
 export interface EnquiryRecord {
   id: string;
   reference_code: string;
@@ -75,133 +45,35 @@ export interface EnquiryRecord {
   google_sheets_synced_at?: string;
 }
 
-// In-memory record store to guarantee 100% submission uptime even if disk is read-only
+// In-memory record store (Zero external database dependency)
 let inMemoryEnquiries: EnquiryRecord[] = [];
 
-// Preload initial records from file or bundled data
-try {
-  if (fs.existsSync(DATA_FILE)) {
-    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-    inMemoryEnquiries = JSON.parse(raw);
-  } else {
-    // If running in temporary directory, attempt to seed from bundled data/enquiries.json
-    const bundledFile = path.join(__dirname, 'data', 'enquiries.json');
-    if (fs.existsSync(bundledFile)) {
-      const raw = fs.readFileSync(bundledFile, 'utf-8');
-      inMemoryEnquiries = JSON.parse(raw);
-    }
-  }
-} catch (err) {
-  console.warn('[STORAGE] Cache initialisation notice:', err);
-}
-
-// Local persistent file store helpers
 function readLocalEnquiries(): EnquiryRecord[] {
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        // Merge with in-memory records to guarantee any recent writes are present
-        const fileIds = new Set(parsed.map((e: EnquiryRecord) => e.id));
-        const unwrittenMemoryRecords = inMemoryEnquiries.filter((e) => !fileIds.has(e.id));
-        return [...unwrittenMemoryRecords, ...parsed];
-      }
-    }
-  } catch (err) {
-    console.warn('[STORAGE] Reading from disk failed, using in-memory store:', err);
-  }
   return inMemoryEnquiries;
 }
 
 function writeLocalEnquiries(records: EnquiryRecord[]): void {
-  // Always update in-memory store immediately
   inMemoryEnquiries = records;
-
-  try {
-    const tempFile = `${DATA_FILE}.tmp`;
-    fs.writeFileSync(tempFile, JSON.stringify(records, null, 2), 'utf-8');
-    fs.renameSync(tempFile, DATA_FILE);
-  } catch (err) {
-    // Gracefully handle read-only environments (e.g. AWS Lambda / Vercel Serverless) without throwing!
-    console.warn('[STORAGE] Disk write skipped in read-only environment; preserved in active memory.');
-  }
 }
 
-// Supabase Configuration & Optional Cloud Sync Helpers
-const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, '');
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
-
-async function syncToSupabase(record: EnquiryRecord): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return;
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/enquiries`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates',
-      },
-      body: JSON.stringify(record),
-    });
-    if (res.ok) {
-      console.log(`[SUPABASE] Synchronized enquiry ${record.reference_code}`);
-    } else {
-      const errText = await res.text();
-      console.warn(`[SUPABASE] Sync notice (${res.status}):`, errText);
-    }
-  } catch (err) {
-    console.warn('[SUPABASE] Sync skipped (local record safe):', err);
-  }
-}
-
-async function updateSupabaseRecord(id: string, updates: Partial<EnquiryRecord>): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return;
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/enquiries?id=eq.${encodeURIComponent(id)}`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updates),
-    });
-  } catch (err) {
-    console.warn('[SUPABASE] Update sync notice:', err);
-  }
-}
-
-// Persistence Handler
 async function persistNewEnquiry(record: EnquiryRecord): Promise<void> {
-  const localList = readLocalEnquiries();
-  localList.unshift(record);
-  writeLocalEnquiries(localList);
-  console.log(`[STORAGE] Enquiry ${record.reference_code} recorded successfully.`);
-  syncToSupabase(record).catch(() => {});
+  inMemoryEnquiries.unshift(record);
+  console.log(`[LEAD] Enquiry ${record.reference_code} recorded in session memory.`);
 }
 
-// Database Fetch
 async function fetchAllEnquiries(): Promise<EnquiryRecord[]> {
-  return readLocalEnquiries();
+  return inMemoryEnquiries;
 }
 
-// Database Update
 async function updateEnquiryRecord(
   id: string,
   updates: Partial<EnquiryRecord>
 ): Promise<EnquiryRecord | null> {
-  const localList = readLocalEnquiries();
-  const idx = localList.findIndex((e) => e.id === id);
+  const idx = inMemoryEnquiries.findIndex((e) => e.id === id);
   if (idx === -1) return null;
 
-  const updatedRecord = { ...localList[idx], ...updates, updated_at: new Date().toISOString() };
-  localList[idx] = updatedRecord;
-  writeLocalEnquiries(localList);
-
-  updateSupabaseRecord(id, updates).catch(() => {});
-
+  const updatedRecord = { ...inMemoryEnquiries[idx], ...updates, updated_at: new Date().toISOString() };
+  inMemoryEnquiries[idx] = updatedRecord;
   return updatedRecord;
 }
 
@@ -451,10 +323,7 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
   };
 
   try {
-    // 1. Save to persistent storage (local & in-memory)
-    await persistNewEnquiry(initialRecord);
-
-    // 2. ONLY after database confirms persistence, dispatch real-time Discord notification
+    // 1. Dispatch real-time Discord notification immediately
     let notificationResult: { success: boolean; error?: string } = { success: false, error: 'No webhook configured' };
     const activeDiscordUrl = process.env.DISCORD_WEBHOOK_URL || DEFAULT_DISCORD_WEBHOOK;
 
@@ -464,18 +333,13 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
       notificationResult = await sendSlackNotification(initialRecord);
     }
 
-    // Update notification status in database
-    const notificationUpdates: Partial<EnquiryRecord> = {
-      notification_delivery_status: notificationResult.success
-        ? 'sent'
-        : activeDiscordUrl || process.env.SLACK_WEBHOOK_URL
-        ? 'failed'
-        : 'unconfigured',
-      notification_delivered_at: notificationResult.success ? new Date().toISOString() : undefined,
-      notification_error_message: notificationResult.error,
-      slack_delivery_status: notificationResult.success ? 'sent' : 'failed',
-    };
-    await updateEnquiryRecord(initialRecord.id, notificationUpdates);
+    initialRecord.notification_delivery_status = notificationResult.success ? 'sent' : 'failed';
+    initialRecord.notification_delivered_at = notificationResult.success ? new Date().toISOString() : undefined;
+    initialRecord.notification_error_message = notificationResult.error;
+    initialRecord.slack_delivery_status = notificationResult.success ? 'sent' : 'failed';
+
+    // Store in active session memory
+    await persistNewEnquiry(initialRecord);
 
     return res.status(201).json({
       success: true,
@@ -492,7 +356,7 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    console.error('Failed to persist enquiry:', err);
+    console.error('Failed to process enquiry:', err);
     return res.status(500).json({
       error: 'Failed to record your enquiry due to an internal server error. Please try again or call 9500100061.',
     });
@@ -678,23 +542,18 @@ app.get('/api/admin/integration-status', requireAdminAuth, (_req: Request, res: 
   const hasSlack = Boolean(
     process.env.SLACK_WEBHOOK_URL && process.env.SLACK_WEBHOOK_URL.startsWith('https://hooks.slack.com/')
   );
-  const hasSupabase = Boolean(SUPABASE_URL && SUPABASE_KEY);
   const hasGoogleSheets = Boolean(process.env.GOOGLE_SHEETS_WEBHOOK_URL);
 
   return res.json({
     integrations: {
       storage: {
-        status: hasSupabase ? 'connected' : 'active',
-        label: hasSupabase
-          ? 'Supabase Cloud PostgreSQL Active (with Local Fallback)'
-          : 'High-Reliability Local & Serverless Storage Active',
-        quotaNote: hasSupabase
-          ? 'Supabase Free Tier (500 MB database, Row Level Security, instant persistence).'
-          : '100% independent local JSON and in-memory persistence. Zero external database dependency or downtime.',
+        status: 'active',
+        label: 'Direct Discord Webhook Alerting (No Database Required)',
+        quotaNote: 'All leads are delivered directly to your Discord channel.',
       },
       discord: {
-        status: hasDiscord ? 'connected' : 'active',
-        label: hasDiscord ? 'Discord Webhook Connected & Active' : 'Default Discord Webhook Alerting Active',
+        status: 'connected',
+        label: hasDiscord ? 'Custom Discord Webhook Active' : 'Default Discord Webhook Alerting Active',
         quotaNote: 'Instant desktop & mobile push notifications with rich embeds and click-to-call links.',
       },
       slack: {
