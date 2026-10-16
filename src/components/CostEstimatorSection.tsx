@@ -37,71 +37,6 @@ export const CostEstimatorSection: React.FC<CostEstimatorProps> = ({ onSelectEst
   const [includeGateAutomation, setIncludeGateAutomation] = useState(false);
   const [includeAmc, setIncludeAmc] = useState(false);
 
-  // Dynamic estimate calculation based on authentic Chennai security market standards
-  const calculateEstimate = () => {
-    let baseMin = 0;
-    let baseMax = 0;
-
-    // Base camera package pricing (cameras + DVR/NVR + power supply + connectors + installation)
-    switch (cameraCount) {
-      case 2:
-        baseMin = 8500;
-        baseMax = 11000;
-        break;
-      case 4:
-        baseMin = 13500;
-        baseMax = 17500;
-        break;
-      case 8:
-        baseMin = 24000;
-        baseMax = 31000;
-        break;
-      case 16:
-        baseMin = 46000;
-        baseMax = 58000;
-        break;
-      default:
-        baseMin = 13500;
-        baseMax = 17500;
-    }
-
-    // Technology multiplier
-    if (cameraTech === '5mp_colorvu') {
-      baseMin += cameraCount * 650;
-      baseMax += cameraCount * 950;
-    } else if (cameraTech === '4k_ip') {
-      baseMin += cameraCount * 1800;
-      baseMax += cameraCount * 2500;
-    }
-
-    // Storage addition
-    if (storageDays === '30') {
-      baseMin += 1200;
-      baseMax += 1600;
-    } else if (storageDays === '60') {
-      baseMin += 2800;
-      baseMax += 3600;
-    }
-
-    // Optional Addons
-    if (includeGateAutomation) {
-      baseMin += 24000;
-      baseMax += 32000;
-    }
-
-    if (includeAmc) {
-      baseMin += 2500;
-      baseMax += 3500;
-    }
-
-    return {
-      min: Math.round(baseMin / 100) * 100,
-      max: Math.round(baseMax / 100) * 100,
-    };
-  };
-
-  const estimate = calculateEstimate();
-
   const propertyLabels = {
     home: 'Independent Home / Villa / Flat',
     shop: 'Retail Store / Showroom / Boutique',
@@ -119,8 +54,6 @@ export const CostEstimatorSection: React.FC<CostEstimatorProps> = ({ onSelectEst
     includeGateAutomation ? ' + Motorized Gate Automation' : ''
   }${includeAmc ? ' + 1-Year AMC Maintenance Plan' : ''}`;
 
-  const formattedRange = `₹${estimate.min.toLocaleString('en-IN')} – ₹${estimate.max.toLocaleString('en-IN')}`;
-
   const handleBookSurvey = () => {
     onSelectEstimate({
       serviceName: 'CCTV Camera Installation',
@@ -128,8 +61,8 @@ export const CostEstimatorSection: React.FC<CostEstimatorProps> = ({ onSelectEst
       cameraCount: `${cameraCount} Cameras`,
       techType: techLabels[cameraTech],
       storageDays: `${storageDays} Days`,
-      estimatedRange: formattedRange,
-      notes: `Custom Package: ${summaryNotes}. Estimated Budget: ${formattedRange}`,
+      estimatedRange: 'Custom Quote on Survey',
+      notes: `Custom Package: ${summaryNotes}`,
     });
   };
 
@@ -137,8 +70,7 @@ export const CostEstimatorSection: React.FC<CostEstimatorProps> = ({ onSelectEst
 • Property: ${propertyLabels[propertyType]}
 • Setup: ${cameraCount} Cameras (${techLabels[cameraTech]})
 • Storage: ${storageDays} Days Hard Drive
-${includeGateAutomation ? '• Included: Motorized Gate Automation\n' : ''}${includeAmc ? '• Included: 1-Year AMC Maintenance\n' : ''}• Estimated Range: ${formattedRange}
-Please confirm availability for a free on-site survey in Chennai.`;
+${includeGateAutomation ? '• Included: Motorized Gate Automation\n' : ''}${includeAmc ? '• Included: 1-Year AMC Maintenance\n' : ''}Please confirm availability for a free on-site survey in Chennai.`;
 
   return (
     <section id="estimator" className="py-16 sm:py-24 bg-gradient-to-b from-white to-[#F5F7FA] border-t border-slate-200">
@@ -147,13 +79,13 @@ Please confirm availability for a free on-site survey in Chennai.`;
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#082D68]/10 text-[#082D68] text-xs font-bold uppercase tracking-wider mb-3">
             <Calculator className="w-3.5 h-3.5" />
-            <span>Interactive Quotation Tool</span>
+            <span>Custom Package Builder</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#031D49] tracking-tight">
-            Instant Security Package Estimator
+            Customize Your Security Package
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
-            Select your property needs below for an instant, transparent estimate with equipment breakdown and free on-site survey booking across Chennai.
+            Select your property needs below for a customized equipment breakdown and book a free on-site survey across Chennai.
           </p>
         </div>
 
@@ -371,13 +303,13 @@ Please confirm availability for a free on-site survey in Chennai.`;
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 text-[#FFC400] text-[11px] font-bold uppercase tracking-wider mb-2">
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>Estimated Package Range</span>
+                    <span>Configured Security Package</span>
                   </div>
-                  <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                    {formattedRange}
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    {cameraCount} Camera Security Setup
                   </h3>
                   <p className="text-xs text-slate-300 mt-1">
-                    *Complete estimated package including branded hardware and professional installation.
+                    *Complete customized package including branded hardware and professional installation.
                   </p>
                 </div>
 
@@ -433,7 +365,7 @@ Please confirm availability for a free on-site survey in Chennai.`;
                     onClick={handleBookSurvey}
                     className="w-full py-3.5 px-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#031D49] bg-[#FFC400] hover:bg-[#ffcd20] rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <span>Book Free Site Survey with this Estimate</span>
+                    <span>Book Free Site Survey for this Package</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
