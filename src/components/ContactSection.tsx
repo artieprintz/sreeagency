@@ -106,15 +106,24 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService, 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start">
           {/* Left Column: Direct Contact & Embedded Map */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Phone & Info Card */}
+            {/* Phone & Info Card with Official Logo */}
             <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-              <div>
-                <h3 className="text-lg font-bold text-[#031D49] mb-1">
-                  Direct Phone Enquiries
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Tap to call our Pammal office directly from your mobile device.
-                </p>
+              <div className="flex items-center gap-3.5 pb-3 border-b border-slate-100">
+                <div className="w-12 h-12 rounded-xl bg-white p-1 border border-[#FFC400]/50 shadow-md flex items-center justify-center shrink-0">
+                  <img
+                    src="/images/logo.png"
+                    alt="SREE Agency Official Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#031D49] mb-0.5">
+                    Direct Phone Enquiries
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    SREE Agency • Pammal, Chennai
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-3">

@@ -22,11 +22,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms, onNa
     <footer className="bg-[#021330] text-slate-300 border-t border-[#082D68] pt-14 pb-20 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-white/10">
-          {/* Brand Info */}
+          {/* Brand Info with Official Logo */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#082D68] border border-[#FFC400]/40 flex items-center justify-center text-[#FFC400]">
-                <Shield className="w-5 h-5 fill-[#FFC400]/10 stroke-[2.2]" />
+              <div className="w-12 h-12 rounded-xl bg-white p-1 border border-[#FFC400]/50 shadow-md flex items-center justify-center shrink-0">
+                <img
+                  src="/images/logo.png"
+                  alt="SREE Agency Official Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <div className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">

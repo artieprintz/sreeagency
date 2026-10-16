@@ -64,13 +64,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Main 3-Zone Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 flex items-center justify-between gap-6">
-        {/* Zone 1: Brand Wordmark Element */}
+        {/* Zone 1: Brand Wordmark Element with Official Logo */}
         <button
           onClick={(e) => handleLinkClick(e, '/')}
           className="flex items-center gap-3 shrink-0 group text-left cursor-pointer"
         >
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#082D68] to-[#031D49] border border-[#FFC400]/40 flex items-center justify-center text-[#FFC400] shadow-inner group-hover:border-[#FFC400] transition-colors">
-            <Shield className="w-5 h-5 fill-[#FFC400]/10 stroke-[2.2]" />
+          <div className="w-11 h-11 rounded-xl bg-white p-1 border border-[#FFC400]/50 shadow-md group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
+            <img
+              src="/images/logo.png"
+              alt="SREE Agency Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <div className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">

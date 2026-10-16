@@ -103,10 +103,24 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             </div>
           </div>
 
-          {/* Text Content Side */}
+          {/* Text Content Side with Official Logo */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#082D68]">
-              Our Foundation & Philosophy
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-white p-1 border border-[#FFC400]/50 shadow-md flex items-center justify-center shrink-0">
+                <img
+                  src="/images/logo.png"
+                  alt="SREE Agency Official Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-[#082D68]">
+                  Our Foundation & Philosophy
+                </div>
+                <div className="text-xs text-slate-500 font-medium">
+                  Official Security Solutions Partner in Chennai
+                </div>
+              </div>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#031D49] tracking-tight leading-snug">
               Secure Today, Safe Tomorrow!

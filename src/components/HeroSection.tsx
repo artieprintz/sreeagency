@@ -98,14 +98,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onGetQuote, onRequestC
               {/* Subtle gradient vignette scrim */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#031D49]/90 via-[#031D49]/30 to-transparent pointer-events-none" />
 
-              {/* Floating feature badge */}
-              <div className="absolute bottom-4 left-4 right-4 bg-[#031D49]/95 backdrop-blur-md p-4 rounded-xl border border-white/15 text-xs text-slate-200">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-white text-sm">SREE Agency</span>
-                  <span className="text-[#FFC400] font-semibold">Pammal, Chennai</span>
+              {/* Floating feature badge with Official Logo */}
+              <div className="absolute bottom-4 left-4 right-4 bg-[#031D49]/95 backdrop-blur-md p-3.5 rounded-xl border border-white/15 text-xs text-slate-200 flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-white p-1 border border-[#FFC400]/50 shadow-md shrink-0 flex items-center justify-center">
+                  <img
+                    src="/images/logo.png"
+                    alt="SREE Agency Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
-                <div className="text-slate-300">
-                  CCTV Installation · Gate Automation · Solar Systems · AMC Repairs
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className="font-bold text-white text-sm truncate">SREE Agency</span>
+                    <span className="text-[#FFC400] font-semibold text-[11px] shrink-0">Pammal, Chennai</span>
+                  </div>
+                  <div className="text-slate-300 text-[11px] truncate">
+                    CCTV Installation · Gate Automation · Solar · AMC
+                  </div>
                 </div>
               </div>
             </div>

@@ -122,13 +122,17 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
       <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-8">
         {/* Header */}
         <div className="bg-[#031D49] px-6 py-5 text-white flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-[#FFC400] text-[#031D49] flex items-center justify-center">
-              <PhoneCall className="w-5 h-5" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white p-1 border border-[#FFC400]/50 shadow-md shrink-0 flex items-center justify-center">
+              <img
+                src="/images/logo.png"
+                alt="SREE Agency Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h3 className="text-base font-bold text-white">Request a Callback</h3>
-              <p className="text-[11px] text-slate-300">We will call you back to discuss your security needs</p>
+              <p className="text-[11px] text-slate-300">SREE Agency • Pammal, Chennai</p>
             </div>
           </div>
           <button

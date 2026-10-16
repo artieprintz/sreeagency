@@ -177,15 +177,24 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Direct Phone & Map Info */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Direct Contact Card */}
+            {/* Direct Contact Card with Official Logo */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-              <div>
-                <h2 className="text-xl font-bold text-[#031D49] mb-1">
-                  Direct Office Contacts
-                </h2>
-                <p className="text-xs text-slate-500">
-                  Call our technical desk directly for urgent assistance or on-site inspections.
-                </p>
+              <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100">
+                <div className="w-14 h-14 rounded-2xl bg-white p-1 border border-[#FFC400]/50 shadow-md flex items-center justify-center shrink-0">
+                  <img
+                    src="/images/logo.png"
+                    alt="SREE Agency Official Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-[#031D49] mb-0.5">
+                    Direct Office Contacts
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    SREE Agency • Pammal, Chennai
+                  </p>
+                </div>
               </div>
 
               {/* Phone Lines */}

@@ -312,16 +312,20 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto"
     >
       <div className="relative w-full max-w-6xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
-        {/* Header */}
+        {/* Header with Official Logo */}
         <div className="bg-[#031D49] px-6 py-4 text-white flex items-center justify-between border-b border-[#082D68]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#FFC400] text-[#031D49] flex items-center justify-center font-bold">
-              <Shield className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-white p-1 border border-[#FFC400]/50 shadow-md flex items-center justify-center shrink-0">
+              <img
+                src="/images/logo.png"
+                alt="SREE Agency Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h2 className="text-base font-bold text-white">SREE Agency Lead Management System</h2>
               <p className="text-[11px] text-slate-300">
-                Independent Lead Storage Engine · Real-Time Alerts: Discord Webhook
+                Lead Management · Real-Time Alerts: Discord Webhook
               </p>
             </div>
           </div>
@@ -351,8 +355,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
           {!token ? (
             /* Login Gate */
             <div className="max-w-md mx-auto py-12 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
-              <div className="w-12 h-12 mx-auto rounded-xl bg-[#031D49] text-[#FFC400] flex items-center justify-center mb-4">
-                <Lock className="w-6 h-6" />
+              <div className="w-16 h-16 mx-auto rounded-2xl bg-white p-1.5 border border-[#FFC400]/50 shadow-md flex items-center justify-center mb-4">
+                <img
+                  src="/images/logo.png"
+                  alt="SREE Agency Official Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <h3 className="text-xl font-bold text-[#031D49] mb-1">Staff Authentication Required</h3>
               <p className="text-xs text-slate-500 mb-6">
